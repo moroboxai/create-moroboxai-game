@@ -227,6 +227,7 @@ async function run(): Promise<void> {
      */
     if (!example) {
         const defaults: typeof preferences = {
+            piximoroxel8ai: true,
             typescript: true,
             eslint: true,
             agent: false,
@@ -234,6 +235,41 @@ async function run(): Promise<void> {
         }
         const getPrefOrDefault = (field: string) =>
             preferences[field] ?? defaults[field]
+
+        if (!program.piximoroxel8ai) {
+            if (ciInfo.isCI) {
+                // default to PixiMoroxel8AI in CI as we can't prompt to
+                // prevent breaking setup flows
+                program.piximoroxel8ai = getPrefOrDefault('piximoroxel8ai')
+            } else {
+                const styledPixiMoroxel8AI = blue('PixiMoroxel8AI')
+                const { piximoroxel8ai } = await prompts(
+                    {
+                        type: 'toggle',
+                        name: 'piximoroxel8ai',
+                        message: `Would you like to use ${styledPixiMoroxel8AI}?`,
+                        initial: getPrefOrDefault('piximoroxel8ai'),
+                        active: 'Yes',
+                        inactive: 'No',
+                    },
+                    {
+                        /**
+                         * User inputs Ctrl+C or Ctrl+D to exit the prompt. We should close the
+                         * process and not write to the file system.
+                         */
+                        onCancel: () => {
+                            console.error('Exiting.')
+                            process.exit(1)
+                        },
+                    }
+                )
+                /**
+                 * Depending on the prompt response, set the appropriate program flags.
+                 */
+                program.piximoroxel8ai = Boolean(piximoroxel8ai)
+                preferences.piximoroxel8ai = Boolean(piximoroxel8ai)
+            }
+        }
 
         if (!program.typescript && !program.javascript) {
             if (ciInfo.isCI) {
@@ -340,6 +376,7 @@ async function run(): Promise<void> {
             packageManager,
             example: example && example !== 'default' ? example : undefined,
             examplePath: program.examplePath,
+            piximoroxel8ai: program.piximoroxel8ai,
             typescript: program.typescript,
             eslint: program.eslint,
             agent: program.agent,
@@ -366,6 +403,7 @@ async function run(): Promise<void> {
         await createGame({
             appPath: resolvedProjectPath,
             packageManager,
+            piximoroxel8ai: program.piximoroxel8ai,
             typescript: program.typescript,
             eslint: program.eslint,
             agent: program.agent,

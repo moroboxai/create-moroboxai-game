@@ -25,19 +25,18 @@ export const getTemplateFile = ({
 export const SRC_DIR_NAMES = ['app', 'pages', 'styles']
 
 /**
- * Install a Next.js internal template to a given `root` directory.
+ * Install a MoroboxAI internal template to a given `root` directory.
  */
 export const installTemplate = async ({
-    appName,
+    gameName,
     root,
     packageManager,
     isOnline,
     template,
     mode,
-    tailwind,
+    agent,
     eslint,
     srcDir,
-    importAlias,
 }: InstallTemplateArgs) => {
     console.log(bold(`Using ${packageManager}.`))
 
@@ -48,11 +47,6 @@ export const installTemplate = async ({
     const templatePath = path.join(__dirname, template, mode)
     const copySource = ['**']
     if (!eslint) copySource.push('!eslintrc.json')
-    if (!tailwind)
-        copySource.push(
-            mode == 'ts' ? 'tailwind.config.ts' : '!tailwind.config.js',
-            '!postcss.config.js'
-        )
 
     await copy(copySource, root, {
         parents: true,
@@ -86,35 +80,7 @@ export const installTemplate = async ({
                 `"@/*": ["./*"]`,
                 srcDir ? `"@/*": ["./src/*"]` : `"@/*": ["./*"]`
             )
-            .replace(`"@/*":`, `"${importAlias}":`)
     )
-
-    // update import alias in any files if not using the default
-    if (importAlias !== '@/*') {
-        const files = await glob('**/*', {
-            cwd: root,
-            dot: true,
-            stats: false,
-        })
-        const writeSema = new Sema(8, { capacity: files.length })
-        await Promise.all(
-            files.map(async (file) => {
-                // We don't want to modify compiler options in [ts/js]config.json
-                if (file === 'tsconfig.json' || file === 'jsconfig.json') return
-                await writeSema.acquire()
-                const filePath = path.join(root, file)
-                if ((await fs.promises.stat(filePath)).isFile()) {
-                    await fs.promises.writeFile(
-                        filePath,
-                        (
-                            await fs.promises.readFile(filePath, 'utf8')
-                        ).replace(`@/`, `${importAlias.replace(/\*/g, '')}`)
-                    )
-                }
-                await writeSema.release()
-            })
-        )
-    }
 
     if (srcDir) {
         await makeDir(path.join(root, 'src'))
@@ -148,29 +114,13 @@ export const installTemplate = async ({
                 isAppTemplate ? 'src/app/page' : 'src/pages/index'
             )
         )
-
-        if (tailwind) {
-            const tailwindConfigFile = path.join(
-                root,
-                mode === 'ts' ? 'tailwind.config.ts' : 'tailwind.config.js'
-            )
-            await fs.promises.writeFile(
-                tailwindConfigFile,
-                (
-                    await fs.promises.readFile(tailwindConfigFile, 'utf8')
-                ).replace(
-                    /\.\/(\w+)\/\*\*\/\*\.\{js,ts,jsx,tsx,mdx\}/g,
-                    './src/$1/**/*.{js,ts,jsx,tsx,mdx}'
-                )
-            )
-        }
     }
 
     /**
      * Create a package.json for the new project and write it to disk.
      */
     const packageJson = {
-        name: appName,
+        name: gameName,
         version: '0.1.0',
         private: true,
         scripts: {
@@ -213,13 +163,6 @@ export const installTemplate = async ({
             '@types/node',
             '@types/react-dom'
         )
-    }
-
-    /**
-     * Add Tailwind CSS dependencies.
-     */
-    if (tailwind) {
-        dependencies.push('tailwindcss', 'postcss', 'autoprefixer')
     }
 
     /**

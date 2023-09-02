@@ -33,6 +33,7 @@ export async function createGame({
     packageManager,
     example,
     examplePath,
+    piximoroxel8ai,
     typescript,
     eslint,
     agent,
@@ -42,6 +43,7 @@ export async function createGame({
     packageManager: PackageManager
     example?: string
     examplePath?: string
+    piximoroxel8ai: boolean
     typescript: boolean
     eslint: boolean
     agent: boolean
@@ -49,13 +51,7 @@ export async function createGame({
 }): Promise<void> {
     let repoInfo: RepoInfo | undefined
     const mode: TemplateMode = typescript ? 'ts' : 'js'
-    const template: TemplateType = appRouter
-        ? tailwind
-            ? 'app-tw'
-            : 'app'
-        : tailwind
-            ? 'default-tw'
-            : 'default'
+    const template: TemplateType = 'piximoroxel8ai'
 
     if (example) {
         let repoUrl: URL | undefined
@@ -226,10 +222,9 @@ export async function createGame({
             mode,
             packageManager,
             isOnline,
-            tailwind,
+            agent,
             eslint,
             srcDir,
-            importAlias,
         })
     }
 

@@ -1,6 +1,6 @@
 import { PackageManager } from '../helpers/get-pkg-manager'
 
-export type TemplateType = 'default' | 'app' | 'default-tw' | 'app-tw'
+export type TemplateType = 'piximoroxel8ai'
 export type TemplateMode = 'js' | 'ts'
 
 export interface GetTemplateFileArgs {
@@ -10,7 +10,7 @@ export interface GetTemplateFileArgs {
 }
 
 export interface InstallTemplateArgs {
-    appName: string
+    gameName: string
     root: string
     packageManager: PackageManager
     isOnline: boolean
@@ -18,7 +18,6 @@ export interface InstallTemplateArgs {
     template: TemplateType
     mode: TemplateMode
     eslint: boolean
-    tailwind: boolean
+    agent: boolean
     srcDir: boolean
-    importAlias: string
 }
