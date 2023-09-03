@@ -1,6 +1,6 @@
 {
     "name": "create-moroboxai-game",
-    "version": "0.1.0-alpha.1",
+    "version": "0.1.0-alpha.2",
     "keywords": [],
     "description": "Setup a MoroboxAI game in one command",
     "repository": {
@@ -10,7 +10,7 @@
     "author": "moroboxai",
     "license": "MIT",
     "bin": {
-        "create-moroboxai-game": "./dist/index.ts"
+        "create-moroboxai-game": "./dist/index.js"
     },
     "files": [
         "dist"
