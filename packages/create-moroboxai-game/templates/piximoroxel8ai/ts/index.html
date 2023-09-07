@@ -1,6 +1,8 @@
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PixiMoroxel8AI Game</title>
     <script type="text/javascript" src="./node_modules/moroboxai-game-sdk/lib/umd/moroboxai-game-sdk.js"></script>
     <script type="text/javascript" src="./node_modules/moroboxai-player-sdk/lib/umd/moroboxai-player-sdk.js"></script>
@@ -24,6 +26,7 @@
         <div>piximoroxel8ai v<span id="piximoroxel8ai-version"></span></div>
     </div>
 </body>
+
 <script type="text/javascript">
     (function () {
         document.getElementById("moroboxai-game-sdk-version").innerText = MoroboxAIGameSDK.VERSION;
@@ -34,8 +37,7 @@
         document.getElementById("piximoroxel8ai-version").innerText = PixiMoroxel8AI.VERSION;
 
         player = MoroboxAIPlayer.init(document.getElementById("player"), {
-            // Replace with URL to your header.yml
-            url: "./src/header.yml",
+            url: "./header.yml",
             resizable: false,
             autoPlay: true,
             width: 256,
