@@ -14,7 +14,7 @@ var bunny: PIXI.Sprite;
  * Initializes the game.
  * @param {IPixiMoroxel8AI} vm - instance of the VM
  */
-export function init(vm: IPixiMoroxel8AI) {
+function init(vm: IPixiMoroxel8AI) {
     console.log("init called", vm);
     _vm = vm;
     _PIXI = vm.PIXI;
@@ -23,7 +23,7 @@ export function init(vm: IPixiMoroxel8AI) {
 /**
  * Loads the game and its assets.
  */
-export function load(): Promise<void> {
+function load(): Promise<void> {
     console.log("load called");
     return new Promise<void>((resolve, reject) => {
         console.log("load assets");
@@ -56,7 +56,7 @@ export function load(): Promise<void> {
 /**
  * Resets the state of the game.
  */
-export function reset() {
+function reset() {
     bunny.x = _vm.SWIDTH / 2;
     bunny.y = _vm.SHEIGHT / 2;
 }
@@ -65,7 +65,7 @@ export function reset() {
  * Ticks the game.
  * @param {number} delta - elapsed time
  */
-export function tick(inputs: Array<MoroboxAIGameSDK.IInputs>, delta: number) {
+function tick(inputs: Array<MoroboxAIGameSDK.IInputs>, delta: number) {
     let dX, dY = 0;
 
     if (inputs[0].left) {
@@ -91,10 +91,10 @@ export interface IGameState {
     y: number;
 }
 
-export function getStateForAgent(): IGameState {
+function getStateForAgent(): IGameState {
     // Send the position to agent
     return {
-        x: container.x,
-        y: container.y
+        x: bunny.x,
+        y: bunny.y
     };
 }
