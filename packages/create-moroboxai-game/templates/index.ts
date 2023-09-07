@@ -97,73 +97,72 @@ export const installTemplate = async ({
             })
         )
 
-    /**
-     * Create a package.json for the new project and write it to disk.
-     */
-    const packageJson = {
-        name: gameName,
-        version: '0.1.0',
-        private: true,
-        scripts: {
-            dev: 'next dev',
-            build: 'next build',
-            start: 'next start',
-            lint: 'next lint',
-        },
-    }
-    await fs.promises.writeFile(
-        path.join(root, 'package.json'),
-        JSON.stringify(packageJson, null, 2) + os.EOL
-    )
-
-    /**
-     * These flags will be passed to `install()`, which calls the package manager
-     * install process.
-     */
-    const installFlags = { packageManager, isOnline }
-
-    /**
-     * Default dependencies.
-     */
-    const dependencies = [
-        'react',
-        'react-dom',
-        `next${process.env.NEXT_PRIVATE_TEST_VERSION
-            ? `@${process.env.NEXT_PRIVATE_TEST_VERSION}`
-            : ''
-        }`,
-    ]
-
-    /**
-     * TypeScript projects will have type definitions and other devDependencies.
-     */
-    if (mode === 'ts') {
-        dependencies.push(
-            'typescript',
-            '@types/react',
-            '@types/node',
-            '@types/react-dom'
-        )
-    }
-
-    /**
-     * Default eslint dependencies.
-     */
-    if (eslint) {
-        dependencies.push('eslint', 'eslint-config-next')
-    }
-    /**
-     * Install package.json dependencies if they exist.
-     */
-    if (dependencies.length) {
-        console.log()
-        console.log('Installing dependencies:')
-        for (const dependency of dependencies) {
-            console.log(`- ${cyan(dependency)}`)
+        /**
+         * Create a package.json for the new project and write it to disk.
+         */
+        const packageJson = {
+            name: gameName,
+            version: '0.1.0',
+            private: true,
+            scripts: {
+                dev: 'vite',
+                build: 'tsc && vite build',
+                start: 'next start',
+                lint: 'next lint',
+            },
         }
-        console.log()
+        await fs.promises.writeFile(
+            path.join(root, 'package.json'),
+            JSON.stringify(packageJson, null, 2) + os.EOL
+        )
 
-        await install(root, dependencies, installFlags)
+        /**
+         * These flags will be passed to `install()`, which calls the package manager
+         * install process.
+         */
+        const installFlags = { packageManager, isOnline }
+
+        /**
+         * Default dependencies.
+         */
+        const dependencies = [
+            'moroboxai-game-sdk',
+            'moroboxai-player-sdk',
+            'moroboxai-player-web',
+            'moroboxai-editor-sdk',
+            'moroboxai-editor-web',
+            'piximoroxel8ai',
+            'vite'
+        ]
+
+        /**
+         * TypeScript projects will have type definitions and other devDependencies.
+         */
+        if (mode === 'ts') {
+            dependencies.push(
+                'typescript'
+            )
+        }
+
+        /**
+         * Default eslint dependencies.
+         */
+        if (eslint) {
+            dependencies.push('eslint', 'eslint-config-next')
+        }
+        /**
+         * Install package.json dependencies if they exist.
+         */
+        if (dependencies.length) {
+            console.log()
+            console.log('Installing dependencies:')
+            for (const dependency of dependencies) {
+                console.log(`- ${cyan(dependency)}`)
+            }
+            console.log()
+
+            await install(root, dependencies, installFlags)
+        }
     }
 }
 

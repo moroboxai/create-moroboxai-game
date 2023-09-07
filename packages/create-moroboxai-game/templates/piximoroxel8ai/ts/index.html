@@ -2,12 +2,12 @@
 
 <head>
     <title>PixiMoroxel8AI Game</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moroboxai-game-sdk@latest/lib/umd/moroboxai-game-sdk.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moroboxai-player-sdk@latest/lib/umd/moroboxai-player-sdk.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moroboxai-player-web@latest/lib/umd/moroboxai-player-web.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moroboxai-editor-sdk@latest/lib/umd/moroboxai-editor-sdk.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moroboxai-editor-web@latest/lib/umd/moroboxai-editor-web.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/piximoroxel8ai@latest/lib/umd/piximoroxel8ai.js"></script>
+    <script type="text/javascript" src="./node_modules/moroboxai-game-sdk/lib/umd/moroboxai-game-sdk.js"></script>
+    <script type="text/javascript" src="./node_modules/moroboxai-player-sdk/lib/umd/moroboxai-player-sdk.js"></script>
+    <script type="text/javascript" src="./node_modules/moroboxai-player-web/lib/umd/moroboxai-player-web.js"></script>
+    <script type="text/javascript" src="./node_modules/moroboxai-editor-sdk/lib/umd/moroboxai-editor-sdk.js"></script>
+    <script type="text/javascript" src="./node_modules/moroboxai-editor-web/lib/umd/moroboxai-editor-web.js"></script>
+    <script type="text/javascript" src="./node_modules/piximoroxel8ai/lib/umd/piximoroxel8ai.js"></script>
 </head>
 
 <body class="vertical">
@@ -35,7 +35,7 @@
 
         player = MoroboxAIPlayer.init(document.getElementById("player"), {
             // Replace with URL to your header.yml
-            url: "./dist/header.yml",
+            url: "./src/header.yml",
             resizable: false,
             autoPlay: true,
             width: 256,
@@ -45,7 +45,7 @@
 
         MoroboxAIEditor.init({
             element: document.getElementById("editor"),
-            url: "./dist/agent.js",
+            url: "./src/agent.ts",
             width: "500px",
             height: "400px",
             onLoad: (language, value) => player.getController(0).loadAgent({
