@@ -22,7 +22,7 @@ export const getTemplateFile = ({
     return path.join(__dirname, template, mode, file)
 }
 
-export const SRC_DIR_NAMES = ['app', 'pages', 'styles']
+export const SRC_DIR_NAMES = ['agent.ts', 'agent.js', 'game.ts', 'game.js']
 
 /**
  * Install a MoroboxAI internal template to a given `root` directory.
@@ -47,6 +47,7 @@ export const installTemplate = async ({
     const templatePath = path.join(__dirname, template, mode)
     const copySource = ['**']
     if (!eslint) copySource.push('!eslintrc.json')
+    if (!agent) copySource.push('!agent.ts', '!agent.js')
 
     await copy(copySource, root, {
         parents: true,
@@ -95,26 +96,6 @@ export const installTemplate = async ({
                     })
             })
         )
-
-        const isAppTemplate = template.startsWith('app')
-
-        // Change the `Get started by editing pages/index` / `app/page` to include `src`
-        const indexPageFile = path.join(
-            'src',
-            isAppTemplate ? 'app' : 'pages',
-            `${isAppTemplate ? 'page' : 'index'}.${mode === 'ts' ? 'tsx' : 'js'}`
-        )
-
-        await fs.promises.writeFile(
-            indexPageFile,
-            (
-                await fs.promises.readFile(indexPageFile, 'utf8')
-            ).replace(
-                isAppTemplate ? 'app/page' : 'pages/index',
-                isAppTemplate ? 'src/app/page' : 'src/pages/index'
-            )
-        )
-    }
 
     /**
      * Create a package.json for the new project and write it to disk.
