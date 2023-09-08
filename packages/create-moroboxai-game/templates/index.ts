@@ -144,71 +144,71 @@ export const installTemplate = async ({
                     `src/agent.js`
                 )
         )
+    }
 
-        /**
-         * Create a package.json for the new project and write it to disk.
-         */
-        const packageJson = {
-            name: gameName,
-            version: '0.1.0',
-            private: true,
-            scripts: {
-                dev: 'vite',
-                build: 'tsc && vite build',
-                start: 'next start',
-                lint: 'next lint',
-            },
-        }
-        await fs.promises.writeFile(
-            path.join(root, 'package.json'),
-            JSON.stringify(packageJson, null, 2) + os.EOL
+    /**
+     * Create a package.json for the new project and write it to disk.
+     */
+    const packageJson = {
+        name: gameName,
+        version: '0.1.0',
+        private: true,
+        scripts: {
+            dev: 'vite',
+            build: 'tsc && vite build',
+            start: 'next start',
+            lint: 'next lint',
+        },
+    }
+    await fs.promises.writeFile(
+        path.join(root, 'package.json'),
+        JSON.stringify(packageJson, null, 2) + os.EOL
+    )
+
+    /**
+     * These flags will be passed to `install()`, which calls the package manager
+     * install process.
+     */
+    const installFlags = { packageManager, isOnline }
+
+    /**
+     * Default dependencies.
+     */
+    const dependencies = [
+        'vite',
+        'moroboxai-game-sdk',
+        'moroboxai-player-web',
+        'moroboxai-editor-web',
+        template
+    ]
+
+    /**
+     * TypeScript projects will have type definitions and other devDependencies.
+     */
+    if (mode === 'ts') {
+        dependencies.push(
+            'typescript'
         )
+    }
 
-        /**
-         * These flags will be passed to `install()`, which calls the package manager
-         * install process.
-         */
-        const installFlags = { packageManager, isOnline }
-
-        /**
-         * Default dependencies.
-         */
-        const dependencies = [
-            'vite',
-            'moroboxai-game-sdk',
-            'moroboxai-player-web',
-            'moroboxai-editor-web',
-            template
-        ]
-
-        /**
-         * TypeScript projects will have type definitions and other devDependencies.
-         */
-        if (mode === 'ts') {
-            dependencies.push(
-                'typescript'
-            )
+    /**
+     * Default eslint dependencies.
+     */
+    if (eslint) {
+        dependencies.push('eslint', 'eslint-config-next')
+    }
+    /**
+     * Install package.json dependencies if they exist.
+     */
+    if (dependencies.length) {
+        console.log()
+        console.log('Installing dependencies:')
+        for (const dependency of dependencies) {
+            console.log(`- ${cyan(dependency)}`)
         }
+        console.log()
 
-        /**
-         * Default eslint dependencies.
-         */
-        if (eslint) {
-            dependencies.push('eslint', 'eslint-config-next')
-        }
-        /**
-         * Install package.json dependencies if they exist.
-         */
-        if (dependencies.length) {
-            console.log()
-            console.log('Installing dependencies:')
-            for (const dependency of dependencies) {
-                console.log(`- ${cyan(dependency)}`)
-            }
-            console.log()
-
-            await install(root, dependencies, installFlags)
-        }
+        await install(root, dependencies, installFlags)
     }
 }
 
