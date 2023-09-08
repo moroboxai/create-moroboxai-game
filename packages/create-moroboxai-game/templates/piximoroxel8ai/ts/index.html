@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PixiMoroxel8AI Game</title>
+    <title>game</title>
     <script type="text/javascript" src="./node_modules/moroboxai-player-web/lib/umd/moroboxai-player-web.js"></script>
     <script type="text/javascript" src="./node_modules/moroboxai-editor-web/lib/umd/moroboxai-editor-web.js"></script>
     <script type="text/javascript" src="./node_modules/piximoroxel8ai/lib/umd/piximoroxel8ai.js"></script>
@@ -38,7 +38,7 @@
 
         MoroboxAIEditor.init({
             element: document.getElementById("editor"),
-            url: "./src/agent.ts",
+            url: "./agent.ts",
             width: "500px",
             height: "400px",
             onLoad: (language, value) => player.getController(0).loadAgent({

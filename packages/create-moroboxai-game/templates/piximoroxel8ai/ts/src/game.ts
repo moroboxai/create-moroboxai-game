@@ -7,9 +7,6 @@ declare const vm: IPixiMoroxel8AI;
 // Instance of pixi.js stage
 declare const stage: PIXI.Container;
 
-// Instance of pixi.js
-var _PIXI: typeof PIXI = vm.PIXI;
-
 var bunnyTexture: PIXI.Texture;
 var bunny: PIXI.Sprite;
 
@@ -21,7 +18,7 @@ function load(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         console.log("load assets");
         // use PIXI.Loader to load assets
-        const loader = new _PIXI.Loader();
+        const loader = new PIXI.Loader();
 
         // load bunny.png
         loader.add("bunny", vm.player.gameServer.href(`assets/bunny.png`));
@@ -34,7 +31,7 @@ function load(): Promise<void> {
             bunnyTexture = loader.resources.bunny.texture;
 
             // Create the bunny
-            bunny = new _PIXI.Sprite(bunnyTexture);
+            bunny = new PIXI.Sprite(bunnyTexture);
             bunny.anchor.set(0.5);
             stage.addChild(bunny);
 

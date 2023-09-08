@@ -83,6 +83,27 @@ export const installTemplate = async ({
             )
     )
 
+    const indexFile = path.join(root, 'index.html')
+    await fs.promises.writeFile(
+        indexFile,
+        (await fs.promises.readFile(indexFile, 'utf8'))
+            .replace(
+                `<title>game</title>`,
+                `<title>${gameName}</title>`
+            )
+    )
+
+    if (!agent) {
+        await fs.promises.writeFile(
+            indexFile,
+            (await fs.promises.readFile(indexFile, 'utf8'))
+                .replace(
+                    `url: "./ agent.ts"`,
+                    `url: undefined`,
+                )
+        )
+    }
+
     if (srcDir) {
         await makeDir(path.join(root, 'src'))
         await Promise.all(
@@ -95,6 +116,33 @@ export const installTemplate = async ({
                         }
                     })
             })
+        )
+
+        const headerFile = path.join(root, 'header.yml')
+        await fs.promises.writeFile(
+            headerFile,
+            (await fs.promises.readFile(headerFile, 'utf8'))
+                .replace(
+                    `game.ts`,
+                    `src/game.ts`
+                )
+                .replace(
+                    `game.js`,
+                    `src/game.js`
+                )
+        )
+
+        await fs.promises.writeFile(
+            indexFile,
+            (await fs.promises.readFile(indexFile, 'utf8'))
+                .replace(
+                    `agent.ts`,
+                    `src/agent.ts`
+                )
+                .replace(
+                    `agent.js`,
+                    `src/agent.js`
+                )
         )
 
         /**
@@ -127,6 +175,7 @@ export const installTemplate = async ({
          */
         const dependencies = [
             'vite',
+            'moroboxai-game-sdk',
             'moroboxai-player-web',
             'moroboxai-editor-web',
             template
