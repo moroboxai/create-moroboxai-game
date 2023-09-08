@@ -99,7 +99,7 @@ export const installTemplate = async ({
             (await fs.promises.readFile(indexFile, 'utf8'))
                 .replace(
                     `url: "./agent.ts"`,
-                    `value: "function inputs(state) {\n    return {\n        left: false,\n        right: false,\n        up: false,\n        down: false\n    }\n}"`,
+                    `value: "function inputs(state) {\\n    return {\\n        left: false,\\n        right: false,\\n        up: false,\\n        down: false\\n    }\\n}"`,
                 )
         )
     }
