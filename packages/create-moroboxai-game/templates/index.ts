@@ -126,13 +126,10 @@ export const installTemplate = async ({
          * Default dependencies.
          */
         const dependencies = [
-            'moroboxai-game-sdk',
-            'moroboxai-player-sdk',
+            'vite',
             'moroboxai-player-web',
-            'moroboxai-editor-sdk',
             'moroboxai-editor-web',
-            'piximoroxel8ai',
-            'vite'
+            template
         ]
 
         /**

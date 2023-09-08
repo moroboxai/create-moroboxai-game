@@ -2,23 +2,16 @@ import * as MoroboxAIGameSDK from "moroboxai-game-sdk";
 import { IPixiMoroxel8AI } from "piximoroxel8ai";
 
 // Instance of the VM
-var _vm: IPixiMoroxel8AI;
+declare const vm: IPixiMoroxel8AI;
+
+// Instance of pixi.js stage
+declare const stage: PIXI.Container;
 
 // Instance of pixi.js
-var _PIXI: typeof PIXI;
+var _PIXI: typeof PIXI = vm.PIXI;
 
 var bunnyTexture: PIXI.Texture;
 var bunny: PIXI.Sprite;
-
-/**
- * Initializes the game.
- * @param {IPixiMoroxel8AI} vm - instance of the VM
- */
-function init(vm: IPixiMoroxel8AI) {
-    console.log("init called", vm);
-    _vm = vm;
-    _PIXI = vm.PIXI;
-}
 
 /**
  * Loads the game and its assets.
@@ -31,7 +24,7 @@ function load(): Promise<void> {
         const loader = new _PIXI.Loader();
 
         // load bunny.png
-        loader.add("bunny", _vm.player.gameServer.href(`assets/bunny.png`));
+        loader.add("bunny", vm.player.gameServer.href(`assets/bunny.png`));
 
         // notify when done
         loader.onComplete.add(() => {
@@ -43,12 +36,12 @@ function load(): Promise<void> {
             // Create the bunny
             bunny = new _PIXI.Sprite(bunnyTexture);
             bunny.anchor.set(0.5);
-            _vm.stage.addChild(bunny);
+            stage.addChild(bunny);
 
             resolve()
         });
 
-        // start loading
+        // start loading assets
         loader.load();
     });
 }
@@ -57,8 +50,8 @@ function load(): Promise<void> {
  * Resets the state of the game.
  */
 function reset() {
-    bunny.x = _vm.SWIDTH / 2;
-    bunny.y = _vm.SHEIGHT / 2;
+    bunny.x = vm.SWIDTH / 2;
+    bunny.y = vm.SHEIGHT / 2;
 }
 
 /**
@@ -66,7 +59,7 @@ function reset() {
  * @param {number} delta - elapsed time
  */
 function tick(inputs: Array<MoroboxAIGameSDK.IInputs>, delta: number) {
-    let dX, dY = 0;
+    let dX = 0, dY = 0;
 
     if (inputs[0].left) {
         dX = -1;
