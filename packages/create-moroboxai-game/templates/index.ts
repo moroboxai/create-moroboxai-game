@@ -58,10 +58,13 @@ export const installTemplate = async ({
     if (!agent) copySource.push(`!${agentFile}`);
 
     await Promise.all(
-        ["README-template.md", "index-template.html"].map(async (name) => {
+        Object.entries({
+            "README-template.md": "README.md",
+            "index-template.html": "index.html"
+        }).map(async ([key, value]) => {
             await fs.promises.copyFile(
-                path.join(__dirname, "piximoroxel8ai", "js", name),
-                path.join(root, name)
+                path.join(__dirname, "piximoroxel8ai", "js", key),
+                path.join(root, value)
             );
         })
     );
