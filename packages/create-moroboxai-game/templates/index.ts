@@ -24,12 +24,6 @@ export const getTemplateFile = ({
 
 export const SRC_DIR_NAMES = ["agent.ts", "agent.js", "game.ts", "game.js"];
 
-// Files to copy and rename from the templates directory
-export const COPY_FROM_TEMPLATES_DIR = {
-    "README-template.md": "README.md",
-    "index-template.html": "index.html"
-};
-
 export const TEMPLATE_MODULE_NAME = {
     piximoroxel8ai: "PixiMoroxel8AI"
 };
@@ -63,6 +57,15 @@ export const installTemplate = async ({
     if (!prettier) copySource.push("!prettierrc.json");
     if (!agent) copySource.push(`!${agentFile}`);
 
+    await Promise.all(
+        ["README-template.md", "index-template.html"].map(async (name) => {
+            await fs.promises.copyFile(
+                path.join(__dirname, "piximoroxel8ai", "js", name),
+                path.join(root, name)
+            );
+        })
+    );
+
     await copy(copySource, root, {
         parents: true,
         cwd: templatePath,
@@ -75,19 +78,18 @@ export const installTemplate = async ({
                 case "prettierrc.json": {
                     return `.prettierrc`;
                 }
+                case "README-template.md": {
+                    return "README.md";
+                }
+                case "index-template.html": {
+                    return "index.html";
+                }
                 default: {
                     return name;
                 }
             }
         }
     });
-
-    for (const [key, value] of Object.entries(COPY_FROM_TEMPLATES_DIR)) {
-        await fs.promises.copyFile(
-            path.join(__dirname, key),
-            path.join(root, value)
-        );
-    }
 
     const tsconfigFile = path.join(
         root,
