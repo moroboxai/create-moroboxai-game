@@ -1,32 +1,32 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import retry from 'async-retry'
-import { red, green, cyan } from 'picocolors'
-import fs from 'fs'
-import path from 'path'
+import retry from "async-retry";
+import { red, green, cyan } from "picocolors";
+import fs from "fs";
+import path from "path";
 import {
     downloadAndExtractExample,
     downloadAndExtractRepo,
     getRepoInfo,
     existsInRepo,
     hasRepo,
-    RepoInfo,
-} from './helpers/examples'
-import { makeDir } from './helpers/make-dir'
-import { tryGitInit } from './helpers/git'
-import { install } from './helpers/install'
-import { isFolderEmpty } from './helpers/is-folder-empty'
-import { getOnline } from './helpers/is-online'
-import { isWriteable } from './helpers/is-writeable'
-import type { PackageManager } from './helpers/get-pkg-manager'
+    RepoInfo
+} from "./helpers/examples";
+import { makeDir } from "./helpers/make-dir";
+import { tryGitInit } from "./helpers/git";
+import { install } from "./helpers/install";
+import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { getOnline } from "./helpers/is-online";
+import { isWriteable } from "./helpers/is-writeable";
+import type { PackageManager } from "./helpers/get-pkg-manager";
 
 import {
     getTemplateFile,
     installTemplate,
     TemplateMode,
-    TemplateType,
-} from './templates'
+    TemplateType
+} from "./templates";
 
-export class DownloadError extends Error { }
+export class DownloadError extends Error {}
 
 export async function createGame({
     appPath,
@@ -36,68 +36,70 @@ export async function createGame({
     piximoroxel8ai,
     typescript,
     eslint,
+    prettier,
     agent,
-    srcDir,
+    srcDir
 }: {
-    appPath: string
-    packageManager: PackageManager
-    example?: string
-    examplePath?: string
-    piximoroxel8ai: boolean
-    typescript: boolean
-    eslint: boolean
-    agent: boolean
-    srcDir: boolean
+    appPath: string;
+    packageManager: PackageManager;
+    example?: string;
+    examplePath?: string;
+    piximoroxel8ai: boolean;
+    typescript: boolean;
+    eslint: boolean;
+    prettier: boolean;
+    agent: boolean;
+    srcDir: boolean;
 }): Promise<void> {
-    let repoInfo: RepoInfo | undefined
-    const mode: TemplateMode = typescript ? 'ts' : 'js'
-    const template: TemplateType = 'piximoroxel8ai'
+    let repoInfo: RepoInfo | undefined;
+    const mode: TemplateMode = typescript ? "ts" : "js";
+    const template: TemplateType = "piximoroxel8ai";
 
     if (example) {
-        let repoUrl: URL | undefined
+        let repoUrl: URL | undefined;
 
         try {
-            repoUrl = new URL(example)
+            repoUrl = new URL(example);
         } catch (error: any) {
-            if (error.code !== 'ERR_INVALID_URL') {
-                console.error(error)
-                process.exit(1)
+            if (error.code !== "ERR_INVALID_URL") {
+                console.error(error);
+                process.exit(1);
             }
         }
 
         if (repoUrl) {
-            if (repoUrl.origin !== 'https://github.com') {
+            if (repoUrl.origin !== "https://github.com") {
                 console.error(
                     `Invalid URL: ${red(
                         `"${example}"`
                     )}. Only GitHub repositories are supported. Please use a GitHub URL and try again.`
-                )
-                process.exit(1)
+                );
+                process.exit(1);
             }
 
-            repoInfo = await getRepoInfo(repoUrl, examplePath)
+            repoInfo = await getRepoInfo(repoUrl, examplePath);
 
             if (!repoInfo) {
                 console.error(
                     `Found invalid GitHub URL: ${red(
                         `"${example}"`
                     )}. Please fix the URL and try again.`
-                )
-                process.exit(1)
+                );
+                process.exit(1);
             }
 
-            const found = await hasRepo(repoInfo)
+            const found = await hasRepo(repoInfo);
 
             if (!found) {
                 console.error(
                     `Could not locate the repository for ${red(
                         `"${example}"`
                     )}. Please check that the repository exists and try again.`
-                )
-                process.exit(1)
+                );
+                process.exit(1);
             }
-        } else if (example !== '__internal-testing-retry') {
-            const found = await existsInRepo(example)
+        } else if (example !== "__internal-testing-retry") {
+            const found = await existsInRepo(example);
 
             if (!found) {
                 console.error(
@@ -108,42 +110,42 @@ export async function createGame({
                         `"${example}"`
                     )} might be incorrect.\n`,
                     `2. You might not be connected to the internet or you are behind a proxy.`
-                )
-                process.exit(1)
+                );
+                process.exit(1);
             }
         }
     }
 
-    const root = path.resolve(appPath)
+    const root = path.resolve(appPath);
 
     if (!(await isWriteable(path.dirname(root)))) {
         console.error(
-            'The application path is not writable, please check folder permissions and try again.'
-        )
+            "The application path is not writable, please check folder permissions and try again."
+        );
         console.error(
-            'It is likely you do not have write permissions for this folder.'
-        )
-        process.exit(1)
+            "It is likely you do not have write permissions for this folder."
+        );
+        process.exit(1);
     }
 
-    const gameName = path.basename(root)
+    const gameName = path.basename(root);
 
-    await makeDir(root)
+    await makeDir(root);
     if (!isFolderEmpty(root, gameName)) {
-        process.exit(1)
+        process.exit(1);
     }
 
-    const useYarn = packageManager === 'yarn'
-    const isOnline = !useYarn || (await getOnline())
-    const originalDirectory = process.cwd()
+    const useYarn = packageManager === "yarn";
+    const isOnline = !useYarn || (await getOnline());
+    const originalDirectory = process.cwd();
 
-    console.log(`Creating a new MoroboxAI game in ${green(root)}.`)
-    console.log()
+    console.log(`Creating a new MoroboxAI game in ${green(root)}.`);
+    console.log();
 
-    process.chdir(root)
+    process.chdir(root);
 
-    const packageJsonPath = path.join(root, 'package.json')
-    let hasPackageJson = false
+    const packageJsonPath = path.join(root, "package.json");
+    let hasPackageJson = false;
 
     if (example) {
         /**
@@ -151,64 +153,70 @@ export async function createGame({
          */
         try {
             if (repoInfo) {
-                const repoInfo2 = repoInfo
+                const repoInfo2 = repoInfo;
                 console.log(
                     `Downloading files from repo ${cyan(
                         example
                     )}. This might take a moment.`
-                )
-                console.log()
+                );
+                console.log();
                 await retry(() => downloadAndExtractRepo(root, repoInfo2), {
-                    retries: 3,
-                })
+                    retries: 3
+                });
             } else {
                 console.log(
                     `Downloading files for example ${cyan(
                         example
                     )}. This might take a moment.`
-                )
-                console.log()
+                );
+                console.log();
                 await retry(() => downloadAndExtractExample(root, example), {
-                    retries: 3,
-                })
+                    retries: 3
+                });
             }
         } catch (reason) {
             function isErrorLike(err: unknown): err is { message: string } {
                 return (
-                    typeof err === 'object' &&
+                    typeof err === "object" &&
                     err !== null &&
-                    typeof (err as { message?: unknown }).message === 'string'
-                )
+                    typeof (err as { message?: unknown }).message === "string"
+                );
             }
             throw new DownloadError(
-                isErrorLike(reason) ? reason.message : reason + ''
-            )
+                isErrorLike(reason) ? reason.message : reason + ""
+            );
         }
         // Copy `.gitignore` if the application did not provide one
-        const ignorePath = path.join(root, '.gitignore')
+        const ignorePath = path.join(root, ".gitignore");
         if (!fs.existsSync(ignorePath)) {
             fs.copyFileSync(
-                getTemplateFile({ template, mode, file: 'gitignore' }),
+                getTemplateFile({ template, mode, file: "gitignore" }),
                 ignorePath
-            )
+            );
         }
 
         // Copy `next-env.d.ts` to any example that is typescript
-        const tsconfigPath = path.join(root, 'tsconfig.json')
+        const tsconfigPath = path.join(root, "tsconfig.json");
         if (fs.existsSync(tsconfigPath)) {
             fs.copyFileSync(
-                getTemplateFile({ template, mode: 'ts', file: 'next-env.d.ts' }),
-                path.join(root, 'next-env.d.ts')
-            )
+                getTemplateFile({
+                    template,
+                    mode: "ts",
+                    file: "next-env.d.ts"
+                }),
+                path.join(root, "next-env.d.ts")
+            );
         }
 
-        hasPackageJson = fs.existsSync(packageJsonPath)
+        hasPackageJson = fs.existsSync(packageJsonPath);
         if (hasPackageJson) {
-            console.log('Installing packages. This might take a couple of minutes.')
-            console.log()
+            console.log(
+                "Installing packages. This might take a couple of minutes."
+            );
+            console.log();
 
-            await install(root, null, { packageManager, isOnline })
-            console.log()
+            await install(root, null, { packageManager, isOnline });
+            console.log();
         }
     } else {
         /**
@@ -224,40 +232,43 @@ export async function createGame({
             isOnline,
             agent,
             eslint,
-            srcDir,
-        })
+            prettier,
+            srcDir
+        });
     }
 
     if (tryGitInit(root)) {
-        console.log('Initialized a git repository.')
-        console.log()
+        console.log("Initialized a git repository.");
+        console.log();
     }
 
-    let cdpath: string
+    let cdpath: string;
     if (path.join(originalDirectory, gameName) === appPath) {
-        cdpath = gameName
+        cdpath = gameName;
     } else {
-        cdpath = appPath
+        cdpath = appPath;
     }
 
-    console.log(`${green('Success!')} Created ${gameName} at ${appPath}`)
+    console.log(`${green("Success!")} Created ${gameName} at ${appPath}`);
 
     if (hasPackageJson) {
-        console.log('Inside that directory, you can run several commands:')
-        console.log()
-        console.log(cyan(`  ${packageManager} ${useYarn ? '' : 'run '}dev`))
-        console.log('    Starts the development server.')
-        console.log()
-        console.log(cyan(`  ${packageManager} ${useYarn ? '' : 'run '}build`))
-        console.log('    Builds the game for production.')
-        console.log()
-        console.log(cyan(`  ${packageManager} start`))
-        console.log('    Runs the built game in production mode.')
-        console.log()
-        console.log('We suggest that you begin by typing:')
-        console.log()
-        console.log(cyan('  cd'), cdpath)
-        console.log(`  ${cyan(`${packageManager} ${useYarn ? '' : 'run '}dev`)}`)
+        console.log("Inside that directory, you can run several commands:");
+        console.log();
+        console.log(cyan(`  ${packageManager} ${useYarn ? "" : "run "}dev`));
+        console.log("    Starts the development server.");
+        console.log();
+        console.log(cyan(`  ${packageManager} ${useYarn ? "" : "run "}build`));
+        console.log("    Builds the game for production.");
+        console.log();
+        console.log(cyan(`  ${packageManager} start`));
+        console.log("    Runs the built game in production mode.");
+        console.log();
+        console.log("We suggest that you begin by typing:");
+        console.log();
+        console.log(cyan("  cd"), cdpath);
+        console.log(
+            `  ${cyan(`${packageManager} ${useYarn ? "" : "run "}dev`)}`
+        );
     }
-    console.log()
+    console.log();
 }
