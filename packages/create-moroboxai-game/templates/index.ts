@@ -128,7 +128,7 @@ export const installTemplate = async ({
                 "game.js": srcDir ? `src/${gameFile}` : gameFile,
                 "agent.js": srcDir ? `src/${agentFile}` : agentFile
             })) {
-                content = content.replace(key, value);
+                content = content.replaceAll(key, value);
             }
 
             await fs.promises.writeFile(file, content);
