@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>game</title>
+    <title>gameName</title>
     <script type="text/javascript" src="./node_modules/moroboxai-player-web/lib/umd/moroboxai-player-web.js"></script>
     <script type="text/javascript" src="./node_modules/moroboxai-editor-web/lib/umd/moroboxai-editor-web.js"></script>
-    <script type="text/javascript" src="./node_modules/piximoroxel8ai/lib/umd/piximoroxel8ai.js"></script>
+    <script type="text/javascript" src="./node_modules/templateName/lib/umd/templateName.js"></script>
 </head>
 
 <body class="vertical">
@@ -17,7 +17,7 @@
     <div id="info">
         <div>moroboxai-player-web v<span id="moroboxai-player-web-version"></span></div>
         <div>moroboxai-editor-web v<span id="moroboxai-editor-web-version"></span></div>
-        <div>piximoroxel8ai v<span id="piximoroxel8ai-version"></span></div>
+        <div>templateName v<span id="templateName-version"></span></div>
     </div>
 </body>
 
@@ -25,7 +25,7 @@
     (function () {
         document.getElementById("moroboxai-player-web-version").innerText = MoroboxAIPlayer.VERSION;
         document.getElementById("moroboxai-editor-web-version").innerText = MoroboxAIEditor.VERSION;
-        document.getElementById("piximoroxel8ai-version").innerText = PixiMoroxel8AI.VERSION;
+        document.getElementById("templateName-version").innerText = templateModuleName.VERSION;
 
         player = MoroboxAIPlayer.init(document.getElementById("player"), {
             url: "./header.yml",
@@ -38,7 +38,7 @@
 
         MoroboxAIEditor.init({
             element: document.getElementById("editor"),
-            url: "./agent.ts",
+            url: "./agent.js",
             width: "500px",
             height: "400px",
             onLoad: (language, value) => player.getController(0).loadAgent({

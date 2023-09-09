@@ -25,7 +25,7 @@ function load(): Promise<void> {
 
         // notify when done
         loader.onComplete.add(() => {
-            console.log('assets loaded');
+            console.log("assets loaded");
 
             // get bunny.png
             bunnyTexture = loader.resources.bunny.texture;
@@ -35,7 +35,7 @@ function load(): Promise<void> {
             bunny.anchor.set(0.5);
             stage.addChild(bunny);
 
-            resolve()
+            resolve();
         });
 
         // start loading assets
@@ -56,19 +56,18 @@ function reset() {
  * @param {number} delta - elapsed time
  */
 function tick(inputs: Array<MoroboxAIGameSDK.IInputs>, delta: number) {
-    let dX = 0, dY = 0;
+    let dX = 0,
+        dY = 0;
 
     if (inputs[0].left) {
         dX = -1;
-    }
-    else if (inputs[0].right) {
+    } else if (inputs[0].right) {
         dX = 1;
     }
 
     if (inputs[0].up) {
         dY = -1;
-    }
-    else if (inputs[0].down) {
+    } else if (inputs[0].down) {
         dY = 1;
     }
 
