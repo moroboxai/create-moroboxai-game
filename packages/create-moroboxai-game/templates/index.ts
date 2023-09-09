@@ -118,21 +118,23 @@ export const installTemplate = async ({
     }
 
     await Promise.all(
-        ["index.html", "header.yml", gameFile, agentFile].map(async (name) => {
-            const file = path.join(root, name);
-            let content = await fs.promises.readFile(file, "utf8");
-            for (const [key, value] of Object.entries({
-                gameName: gameName,
-                templateName: template,
-                templateModuleName: TEMPLATE_MODULE_NAME[template],
-                "game.js": srcDir ? `src/${gameFile}` : gameFile,
-                "agent.js": srcDir ? `src/${agentFile}` : agentFile
-            })) {
-                content = content.replaceAll(key, value);
-            }
+        ["README.md", "index.html", "header.yml", gameFile, agentFile].map(
+            async (name) => {
+                const file = path.join(root, name);
+                let content = await fs.promises.readFile(file, "utf8");
+                for (const [key, value] of Object.entries({
+                    gameName: gameName,
+                    templateName: template,
+                    templateModuleName: TEMPLATE_MODULE_NAME[template],
+                    "game.js": srcDir ? `src/${gameFile}` : gameFile,
+                    "agent.js": srcDir ? `src/${agentFile}` : agentFile
+                })) {
+                    content = content.replaceAll(key, value);
+                }
 
-            await fs.promises.writeFile(file, content);
-        })
+                await fs.promises.writeFile(file, content);
+            }
+        )
     );
 
     if (srcDir) {
