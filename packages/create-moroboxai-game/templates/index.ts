@@ -82,17 +82,12 @@ export const installTemplate = async ({
         }
     });
 
-    await Promise.all(
-        Object.entries(COPY_FROM_TEMPLATES_DIR).map(async ([key, value]) => {
-            await copy(path.join(__dirname, key), path.join(root, value), {
-                parents: true,
-                cwd: __dirname,
-                rename(name) {
-                    return value;
-                }
-            });
-        })
-    );
+    for (const [key, value] of Object.entries(COPY_FROM_TEMPLATES_DIR)) {
+        await fs.promises.copyFile(
+            path.join(__dirname, key),
+            path.join(root, value)
+        );
+    }
 
     const tsconfigFile = path.join(
         root,
