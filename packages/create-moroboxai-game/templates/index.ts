@@ -84,7 +84,13 @@ export const installTemplate = async ({
 
     await Promise.all(
         Object.entries(COPY_FROM_TEMPLATES_DIR).map(async ([key, value]) => {
-            await copy(path.join(__dirname, key), path.join(root, value));
+            await copy(path.join(__dirname, key), path.join(root, value), {
+                parents: true,
+                cwd: __dirname,
+                rename(name) {
+                    return value;
+                }
+            });
         })
     );
 
