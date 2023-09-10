@@ -49,6 +49,7 @@ export const installTemplate = async ({
      * Copy the template files to the target directory.
      */
     console.log("\nInitializing project with template:", template, "\n");
+    const commonTemplatePath = path.join(__dirname, template, "common");
     const templatePath = path.join(__dirname, template, mode);
     const copySource = ["**"];
     const gameFile = mode == "js" ? "game.js" : "game.ts";
@@ -58,41 +59,33 @@ export const installTemplate = async ({
     if (!agent) copySource.push(`!${agentFile}`);
 
     await Promise.all(
-        Object.entries({
-            "README-template.md": "README.md",
-            "index-template.html": "index.html"
-        }).map(async ([key, value]) => {
-            await fs.promises.copyFile(
-                path.join(__dirname, "piximoroxel8ai", "js", key),
-                path.join(root, value)
-            );
+        [commonTemplatePath, templatePath].map(async (path) => {
+            await copy(copySource, root, {
+                parents: true,
+                cwd: path,
+                rename(name) {
+                    switch (name) {
+                        case "gitignore":
+                        case "eslintrc.json": {
+                            return `.${name}`;
+                        }
+                        case "prettierrc.json": {
+                            return `.prettierrc`;
+                        }
+                        case "README-template.md": {
+                            return "README.md";
+                        }
+                        case "index-template.html": {
+                            return "index.html";
+                        }
+                        default: {
+                            return name;
+                        }
+                    }
+                }
+            });
         })
     );
-
-    await copy(copySource, root, {
-        parents: true,
-        cwd: templatePath,
-        rename(name) {
-            switch (name) {
-                case "gitignore":
-                case "eslintrc.json": {
-                    return `.${name}`;
-                }
-                case "prettierrc.json": {
-                    return `.prettierrc`;
-                }
-                case "README-template.md": {
-                    return "README.md";
-                }
-                case "index-template.html": {
-                    return "index.html";
-                }
-                default: {
-                    return name;
-                }
-            }
-        }
-    });
 
     const tsconfigFile = path.join(
         root,
