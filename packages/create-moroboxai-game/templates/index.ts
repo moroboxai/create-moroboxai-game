@@ -115,23 +115,27 @@ export const installTemplate = async ({
     }
 
     await Promise.all(
-        ["README.md", "index.html", "header.yml", gameFile, agentFile].map(
-            async (name) => {
-                const file = path.join(root, name);
-                let content = await fs.promises.readFile(file, "utf8");
-                for (const [key, value] of Object.entries({
-                    gameName: gameName,
-                    templateName: template,
-                    templateModuleName: TEMPLATE_MODULE_NAME[template],
-                    "game.js": gameFile,
-                    "agent.js": agentFile
-                })) {
-                    content = content.replaceAll(key, value);
-                }
-
-                await fs.promises.writeFile(file, content);
+        [
+            "README.md",
+            "index.html",
+            "header.yml",
+            path.join("src", gameFile),
+            path.join("src", agentFile)
+        ].map(async (name) => {
+            const file = path.join(root, name);
+            let content = await fs.promises.readFile(file, "utf8");
+            for (const [key, value] of Object.entries({
+                gameName: gameName,
+                templateName: template,
+                templateModuleName: TEMPLATE_MODULE_NAME[template],
+                "game.js": gameFile,
+                "agent.js": agentFile
+            })) {
+                content = content.replaceAll(key, value);
             }
-        )
+
+            await fs.promises.writeFile(file, content);
+        })
     );
 
     /**
