@@ -247,7 +247,7 @@ async function run(): Promise<void> {
         const getPrefOrDefault = (field: string) =>
             preferences[field] ?? defaults[field];
 
-        if (!program.piximoroxel8ai) {
+        if (false && !program.piximoroxel8ai) {
             if (ciInfo.isCI) {
                 // default to PixiMoroxel8AI in CI as we can't prompt to
                 // prevent breaking setup flows
@@ -281,6 +281,8 @@ async function run(): Promise<void> {
                 preferences.piximoroxel8ai = Boolean(piximoroxel8ai);
             }
         }
+
+        program.piximoroxel8ai = true;
 
         if (!program.typescript && !program.javascript) {
             if (ciInfo.isCI) {
