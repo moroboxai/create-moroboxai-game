@@ -64,7 +64,6 @@ export const installTemplate = async ({
                 parents: true,
                 cwd: path,
                 rename(name) {
-                    console.log(name);
                     switch (name) {
                         case "gitignore":
                         case "eslintrc.json": {
