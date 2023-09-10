@@ -30,7 +30,6 @@ export const copy = async (
         stats: false
     });
     console.log(sourceFiles);
-
     const destRelativeToCwd = cwd ? path.resolve(cwd, dest) : dest;
 
     return Promise.all(
