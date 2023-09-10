@@ -20,5 +20,4 @@ export interface InstallTemplateArgs {
     eslint: boolean;
     prettier: boolean;
     agent: boolean;
-    srcDir: boolean;
 }

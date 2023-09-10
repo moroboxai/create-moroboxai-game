@@ -40,13 +40,6 @@ const program = new Commander.Command(packageJson.name)
         projectPath = name;
     })
     .option(
-        "--piximoroxel8ai",
-        `
-
-  Initialize as a PixiMoroxel8AI game.
-`
-    )
-    .option(
         "--ts, --typescript",
         `
 
@@ -79,13 +72,6 @@ const program = new Commander.Command(packageJson.name)
         `
 
   Initialize with a default agent.
-`
-    )
-    .option(
-        "--src-dir",
-        `
-
-  Initialize inside a \`src/\` directory.
 `
     )
     .option(
@@ -237,52 +223,13 @@ async function run(): Promise<void> {
      */
     if (!example) {
         const defaults: typeof preferences = {
-            piximoroxel8ai: true,
             typescript: true,
             eslint: true,
             prettier: true,
-            agent: false,
-            srcDir: false
+            agent: false
         };
         const getPrefOrDefault = (field: string) =>
             preferences[field] ?? defaults[field];
-
-        if (false && !program.piximoroxel8ai) {
-            if (ciInfo.isCI) {
-                // default to PixiMoroxel8AI in CI as we can't prompt to
-                // prevent breaking setup flows
-                program.piximoroxel8ai = getPrefOrDefault("piximoroxel8ai");
-            } else {
-                const styledPixiMoroxel8AI = blue("PixiMoroxel8AI");
-                const { piximoroxel8ai } = await prompts(
-                    {
-                        type: "toggle",
-                        name: "piximoroxel8ai",
-                        message: `Would you like to use ${styledPixiMoroxel8AI}?`,
-                        initial: getPrefOrDefault("piximoroxel8ai"),
-                        active: "Yes",
-                        inactive: "No"
-                    },
-                    {
-                        /**
-                         * User inputs Ctrl+C or Ctrl+D to exit the prompt. We should close the
-                         * process and not write to the file system.
-                         */
-                        onCancel: () => {
-                            console.error("Exiting.");
-                            process.exit(1);
-                        }
-                    }
-                );
-                /**
-                 * Depending on the prompt response, set the appropriate program flags.
-                 */
-                program.piximoroxel8ai = Boolean(piximoroxel8ai);
-                preferences.piximoroxel8ai = Boolean(piximoroxel8ai);
-            }
-        }
-
-        program.piximoroxel8ai = true;
 
         if (!program.typescript && !program.javascript) {
             if (ciInfo.isCI) {
@@ -365,28 +312,6 @@ async function run(): Promise<void> {
         }
 
         if (
-            !process.argv.includes("--src-dir") &&
-            !process.argv.includes("--no-src-dir")
-        ) {
-            if (ciInfo.isCI) {
-                program.srcDir = getPrefOrDefault("srcDir");
-            } else {
-                const styledSrcDir = blue("`src/` directory");
-                const { srcDir } = await prompts({
-                    onState: onPromptState,
-                    type: "toggle",
-                    name: "srcDir",
-                    message: `Would you like to use ${styledSrcDir}?`,
-                    initial: getPrefOrDefault("srcDir"),
-                    active: "Yes",
-                    inactive: "No"
-                });
-                program.srcDir = Boolean(srcDir);
-                preferences.srcDir = Boolean(srcDir);
-            }
-        }
-
-        if (
             !process.argv.includes("--agent") &&
             !process.argv.includes("--no-agent")
         ) {
@@ -414,12 +339,10 @@ async function run(): Promise<void> {
             packageManager,
             example: example && example !== "default" ? example : undefined,
             examplePath: program.examplePath,
-            piximoroxel8ai: program.piximoroxel8ai,
             typescript: program.typescript,
             eslint: program.eslint,
             prettier: program.prettier,
-            agent: program.agent,
-            srcDir: program.srcDir
+            agent: program.agent
         });
     } catch (reason) {
         if (!(reason instanceof DownloadError)) {
@@ -442,12 +365,10 @@ async function run(): Promise<void> {
         await createGame({
             appPath: resolvedProjectPath,
             packageManager,
-            piximoroxel8ai: program.piximoroxel8ai,
             typescript: program.typescript,
             eslint: program.eslint,
             prettier: program.prettier,
-            agent: program.agent,
-            srcDir: program.srcDir
+            agent: program.agent
         });
     }
     conf.set("preferences", preferences);

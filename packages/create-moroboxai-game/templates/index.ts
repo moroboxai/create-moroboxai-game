@@ -40,8 +40,7 @@ export const installTemplate = async ({
     mode,
     agent,
     eslint,
-    prettier,
-    srcDir
+    prettier
 }: InstallTemplateArgs) => {
     console.log(bold(`Using ${packageManager}.`));
 
@@ -100,7 +99,7 @@ export const installTemplate = async ({
         tsconfigFile,
         (await fs.promises.readFile(tsconfigFile, "utf8")).replace(
             `"@/*": ["./*"]`,
-            srcDir ? `"@/*": ["./src/*"]` : `"@/*": ["./*"]`
+            `"@/*": ["./src/*"]`
         )
     );
 
@@ -124,8 +123,8 @@ export const installTemplate = async ({
                     gameName: gameName,
                     templateName: template,
                     templateModuleName: TEMPLATE_MODULE_NAME[template],
-                    "game.js": srcDir ? `src/${gameFile}` : gameFile,
-                    "agent.js": srcDir ? `src/${agentFile}` : agentFile
+                    "game.js": gameFile,
+                    "agent.js": agentFile
                 })) {
                     content = content.replaceAll(key, value);
                 }
@@ -134,21 +133,6 @@ export const installTemplate = async ({
             }
         )
     );
-
-    if (srcDir) {
-        await makeDir(path.join(root, "src"));
-        await Promise.all(
-            SRC_DIR_NAMES.map(async (file) => {
-                await fs.promises
-                    .rename(path.join(root, file), path.join(root, "src", file))
-                    .catch((err) => {
-                        if (err.code !== "ENOENT") {
-                            throw err;
-                        }
-                    });
-            })
-        );
-    }
 
     /**
      * Create a package.json for the new project and write it to disk.

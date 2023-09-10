@@ -33,23 +33,19 @@ export async function createGame({
     packageManager,
     example,
     examplePath,
-    piximoroxel8ai,
     typescript,
     eslint,
     prettier,
-    agent,
-    srcDir
+    agent
 }: {
     appPath: string;
     packageManager: PackageManager;
     example?: string;
     examplePath?: string;
-    piximoroxel8ai: boolean;
     typescript: boolean;
     eslint: boolean;
     prettier: boolean;
     agent: boolean;
-    srcDir: boolean;
 }): Promise<void> {
     let repoInfo: RepoInfo | undefined;
     const mode: TemplateMode = typescript ? "ts" : "js";
@@ -232,8 +228,7 @@ export async function createGame({
             isOnline,
             agent,
             eslint,
-            prettier,
-            srcDir
+            prettier
         });
     }
 
