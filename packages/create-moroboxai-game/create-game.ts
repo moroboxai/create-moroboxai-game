@@ -227,6 +227,7 @@ export async function createGame({
             gameName,
             root,
             template,
+            commonMode: "common",
             mode,
             packageManager,
             isOnline,

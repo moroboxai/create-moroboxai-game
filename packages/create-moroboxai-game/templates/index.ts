@@ -37,6 +37,7 @@ export const installTemplate = async ({
     packageManager,
     isOnline,
     template,
+    commonMode,
     mode,
     agent,
     eslint,
@@ -49,8 +50,7 @@ export const installTemplate = async ({
      * Copy the template files to the target directory.
      */
     console.log("\nInitializing project with template:", template, "\n");
-    console.log(__dirname);
-    const commonTemplatePath = path.join(__dirname, template, "common");
+    const commonTemplatePath = path.join(__dirname, template, commonMode);
     const templatePath = path.join(__dirname, template, mode);
     const copySource = ["**"];
     const gameFile = mode == "js" ? "game.js" : "game.ts";
@@ -59,7 +59,6 @@ export const installTemplate = async ({
     if (!prettier) copySource.push("!prettierrc.json");
     if (!agent) copySource.push(`!${agentFile}`);
 
-    console.log([commonTemplatePath, templatePath]);
     await Promise.all(
         [commonTemplatePath, templatePath].map(async (cwd) => {
             await copy(copySource, root, {

@@ -16,7 +16,6 @@ export const copy = async (
     dest: string,
     { cwd, rename = identity, parents = true }: CopyOption = {}
 ) => {
-    console.log(cwd);
     const source = typeof src === "string" ? [src] : src;
 
     if (source.length === 0 || !dest) {
@@ -29,7 +28,6 @@ export const copy = async (
         absolute: false,
         stats: false
     });
-    console.log(sourceFiles);
     const destRelativeToCwd = cwd ? path.resolve(cwd, dest) : dest;
 
     return Promise.all(

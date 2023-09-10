@@ -16,6 +16,7 @@ export interface InstallTemplateArgs {
     isOnline: boolean;
 
     template: TemplateType;
+    commonMode: string;
     mode: TemplateMode;
     eslint: boolean;
     prettier: boolean;
