@@ -37,7 +37,6 @@ export const installTemplate = async ({
     packageManager,
     isOnline,
     template,
-    commonMode,
     mode,
     agent,
     eslint,
@@ -50,7 +49,12 @@ export const installTemplate = async ({
      * Copy the template files to the target directory.
      */
     console.log("\nInitializing project with template:", template, "\n");
-    const commonTemplatePath = path.join(__dirname, template, commonMode);
+    const commonTemplatePath = path.join(
+        __dirname,
+        "templates",
+        template,
+        "common"
+    );
     const templatePath = path.join(__dirname, template, mode);
     const copySource = ["**"];
     const gameFile = mode == "js" ? "game.js" : "game.ts";
