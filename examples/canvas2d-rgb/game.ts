@@ -1,3 +1,9 @@
+/**
+ * This is the most basic game you can write for MoroboxAI.
+ * 
+ * Using pure javascript and canvas only, you have control
+ * on everything.
+ */
 import * as MoroboxAIGameSDK from "moroboxai-game-sdk";
 
 declare const exports: any;
