@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "ES6",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es6",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "baseUrl": ".",
+        "declaration": false,
+        "strict": true,
+        "stripInternal": true,
+        "lib": ["es5", "es6", "dom"],
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        }
+    },
+    "include": [
+        "*"
+    ]
+}
