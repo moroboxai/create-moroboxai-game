@@ -89,4 +89,3 @@ exports.boot = (player) => {
         return resolve(new Game(player));
     });
 };
-export {};
