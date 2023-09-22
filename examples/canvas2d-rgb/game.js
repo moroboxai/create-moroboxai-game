@@ -16,6 +16,9 @@ class Game {
         // Internally use the native resolution
         this.canvas.width = this.width;
         this.canvas.height = this.height;
+        // Game loop
+        this.callTicker = this.callTicker.bind(this);
+        window.requestAnimationFrame(this.callTicker);
         this.resize();
     }
     help() {
@@ -38,6 +41,18 @@ class Game {
     }
     getStateForAgent() {
         return this.saveState();
+    }
+    callTicker(time) {
+        if (this.oldTime === undefined) {
+            this.oldTime = time;
+            return;
+        }
+        const deltaTime = time - this.oldTime;
+        this.oldTime = time;
+        if (this.ticker !== undefined) {
+            this.ticker(deltaTime);
+        }
+        window.requestAnimationFrame(this.callTicker);
     }
     tick(inputs, delta, render) {
         // Take agent inputs into account
@@ -74,3 +89,4 @@ exports.boot = (player) => {
         return resolve(new Game(player));
     });
 };
+export {};

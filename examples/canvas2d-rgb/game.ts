@@ -25,6 +25,7 @@ class Game implements MoroboxAIGameSDK.IGame {
   width: number = 128;
   height: number = 128;
   scale: number = 0.5;
+  oldTime?: DOMHighResTimeStamp;
 
   // Offset driven by the agent
   dX: number = 0;
@@ -43,6 +44,10 @@ class Game implements MoroboxAIGameSDK.IGame {
     // Internally use the native resolution
     this.canvas.width = this.width;
     this.canvas.height = this.height;
+
+    // Game loop
+    this.callTicker = this.callTicker.bind(this);
+    window.requestAnimationFrame(this.callTicker);
 
     this.resize();
   }
@@ -74,6 +79,22 @@ class Game implements MoroboxAIGameSDK.IGame {
 
   getStateForAgent(): object {
     return this.saveState();
+  }
+
+  callTicker(time: DOMHighResTimeStamp) {
+    if (this.oldTime === undefined) {
+      this.oldTime = time;
+      return;
+    }
+
+    const deltaTime = time - this.oldTime;
+    this.oldTime = time;
+
+    if (this.ticker !== undefined) {
+      this.ticker(deltaTime);
+    }
+
+    window.requestAnimationFrame(this.callTicker);
   }
 
   ticker?: ((delta: number) => void) | undefined;
