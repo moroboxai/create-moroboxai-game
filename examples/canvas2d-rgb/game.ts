@@ -11,7 +11,7 @@ declare const exports: any;
 /**
  * State of the game sent to agent to determine the inputs.
  */
-interface IGameState {
+export interface IGameState {
   dX: number;
   dY: number;
 }
@@ -105,17 +105,19 @@ class Game implements MoroboxAIGameSDK.IGame {
     delta: number,
     render: boolean
   ): void {
+    const speed = 0.1;
+
     // Take agent inputs into account
     if (inputs[0].left) {
-      this.dX -= delta;
+      this.dX -= speed * delta;
     } else if (inputs[0].right) {
-      this.dX += delta;
+      this.dX += speed * delta;
     }
 
     if (inputs[0].up) {
-      this.dY -= delta;
+      this.dY -= speed * delta;
     } else if (inputs[0].down) {
-      this.dY += delta;
+      this.dY += speed * delta;
     }
 
     // Render if requested

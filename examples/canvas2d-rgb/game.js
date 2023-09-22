@@ -56,18 +56,19 @@ class Game {
         window.requestAnimationFrame(this.callTicker);
     }
     tick(inputs, delta, render) {
+        const speed = 0.1;
         // Take agent inputs into account
         if (inputs[0].left) {
-            this.dX -= delta;
+            this.dX -= speed * delta;
         }
         else if (inputs[0].right) {
-            this.dX += delta;
+            this.dX += speed * delta;
         }
         if (inputs[0].up) {
-            this.dY -= delta;
+            this.dY -= speed * delta;
         }
         else if (inputs[0].down) {
-            this.dY += delta;
+            this.dY += speed * delta;
         }
         // Render if requested
         if (render) {
