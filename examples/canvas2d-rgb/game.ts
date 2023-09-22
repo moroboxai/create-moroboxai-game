@@ -84,14 +84,15 @@ class Game implements MoroboxAIGameSDK.IGame {
   callTicker(time: DOMHighResTimeStamp) {
     if (this.oldTime === undefined) {
       this.oldTime = time;
-      return;
     }
 
-    const deltaTime = time - this.oldTime;
-    this.oldTime = time;
+    if (this.oldTime !== time) {
+      const deltaTime = time - this.oldTime;
+      this.oldTime = time;
 
-    if (this.ticker !== undefined) {
-      this.ticker(deltaTime);
+      if (this.ticker !== undefined) {
+        this.ticker(deltaTime);
+      }
     }
 
     window.requestAnimationFrame(this.callTicker);
