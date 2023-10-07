@@ -1,18 +1,23 @@
 class Game {
-    constructor(player) {
+    constructor(vm) {
         this.width = 128;
         this.height = 128;
         this.scale = 0.5;
         // Offset driven by the agent
         this.dX = 0;
         this.dY = 0;
-        this.player = player;
-        // Attach a canvas to the player
+        this.vm = vm;
+        // Attach a canvas to the VM
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
-        this.imageData = this.context.getImageData(0, 0, this.width, this.height);
+        this.imageData = this.context.getImageData(
+            0,
+            0,
+            this.width,
+            this.height
+        );
         this.data = this.imageData.data;
-        player.root.appendChild(this.canvas);
+        vm.root.appendChild(this.canvas);
         // Internally use the native resolution
         this.canvas.width = this.width;
         this.canvas.height = this.height;
@@ -24,13 +29,13 @@ class Game {
     help() {
         return "";
     }
-    play() { }
-    pause() { }
-    stop() { }
+    play() {}
+    pause() {}
+    stop() {}
     resize() {
-        // Scale to the size of player
-        this.canvas.style.width = this.player.width + "px";
-        this.canvas.style.height = this.player.height + "px";
+        // Scale to the size of VM
+        this.canvas.style.width = this.vm.width + "px";
+        this.canvas.style.height = this.vm.height + "px";
     }
     saveState() {
         return { dX: this.dX, dY: this.dY };
@@ -60,14 +65,12 @@ class Game {
         // Take agent inputs into account
         if (inputs[0].left) {
             this.dX -= speed * delta;
-        }
-        else if (inputs[0].right) {
+        } else if (inputs[0].right) {
             this.dX += speed * delta;
         }
         if (inputs[0].up) {
             this.dY -= speed * delta;
-        }
-        else if (inputs[0].down) {
+        } else if (inputs[0].down) {
             this.dY += speed * delta;
         }
         // Render if requested
@@ -86,8 +89,8 @@ class Game {
         }
     }
 }
-exports.boot = (player) => {
+exports.boot = (vm) => {
     return new Promise((resolve) => {
-        return resolve(new Game(player));
+        return resolve(new Game(vm));
     });
 };
