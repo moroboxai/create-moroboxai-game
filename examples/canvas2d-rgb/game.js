@@ -90,8 +90,8 @@ class Game {
         }
     }
 }
-exports.boot = (vm) => {
+exports.boot = (options) => {
     return new Promise((resolve) => {
-        return resolve(new Game(vm));
+        return resolve(new Game(options.vm));
     });
 };

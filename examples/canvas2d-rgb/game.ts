@@ -4,9 +4,15 @@
  * Using pure javascript and canvas only, you have control
  * on everything.
  */
-import type { IVM, IGame, Controller } from "moroboxai-game-sdk";
+import type {
+    IVM,
+    IGame,
+    Controller,
+    IBootable,
+    BootOptions,
+} from "moroboxai-game-sdk";
 
-declare const exports: any;
+declare const exports: IBootable;
 
 /**
  * State of the game sent to agent to determine the inputs.
@@ -139,8 +145,8 @@ class Game implements IGame {
     }
 }
 
-exports.boot = (vm: IVM) => {
+exports.boot = (options: BootOptions) => {
     return new Promise<IGame>((resolve) => {
-        return resolve(new Game(vm));
+        return resolve(new Game(options.vm));
     });
 };
