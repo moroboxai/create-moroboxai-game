@@ -1,7 +1,7 @@
-import * as MoroboxAIGameSDK from "moroboxai-game-sdk";
-import { IGameState } from "./game";
+import type { Inputs } from "moroboxai-game-sdk";
+import type { IGameState } from "./game";
 
-function inputs(state: IGameState): MoroboxAIGameSDK.IInputs {
+function inputs(state: IGameState): Inputs {
     return [
         { left: true },
         { right: true },

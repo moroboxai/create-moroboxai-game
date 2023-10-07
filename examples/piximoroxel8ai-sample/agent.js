@@ -4,5 +4,5 @@ function inputs(state) {
         { right: true },
         { up: true },
         { down: true },
-    ][Math.floor(Math.random() * 4)]
+    ][Math.floor(Math.random() * 4)];
 }
