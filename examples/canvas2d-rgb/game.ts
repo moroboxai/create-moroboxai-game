@@ -4,7 +4,7 @@
  * Using pure javascript and canvas only, you have control
  * on everything.
  */
-import type { IVM, IGame, Inputs } from "moroboxai-game-sdk";
+import type { IVM, IGame, Controller } from "moroboxai-game-sdk";
 
 declare const exports: any;
 
@@ -105,19 +105,20 @@ class Game implements IGame {
 
     ticker?: ((delta: number) => void) | undefined;
 
-    tick(inputs: Inputs[], delta: number, render: boolean): void {
+    tick(controllers: Controller[], delta: number, render: boolean): void {
         const speed = 0.1;
+        const inputs = controllers[0].inputs;
 
         // Take agent inputs into account
-        if (inputs[0].left) {
+        if (inputs.left) {
             this.dX -= speed * delta;
-        } else if (inputs[0].right) {
+        } else if (inputs.right) {
             this.dX += speed * delta;
         }
 
-        if (inputs[0].up) {
+        if (inputs.up) {
             this.dY -= speed * delta;
-        } else if (inputs[0].down) {
+        } else if (inputs.down) {
             this.dY += speed * delta;
         }
 
