@@ -1,8 +1,5 @@
 class Game {
     constructor(vm) {
-        this.width = 128;
-        this.height = 128;
-        this.scale = 0.5;
         // Offset driven by the agent
         this.dX = 0;
         this.dY = 0;
@@ -10,17 +7,12 @@ class Game {
         // Attach a canvas to the VM
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
-        this.imageData = this.context.getImageData(
-            0,
-            0,
-            this.width,
-            this.height
-        );
+        this.imageData = this.context.getImageData(0, 0, vm.width, vm.height);
         this.data = this.imageData.data;
         vm.root.appendChild(this.canvas);
         // Internally use the native resolution
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.width = vm.width;
+        this.canvas.height = vm.height;
         // Game loop
         this.callTicker = this.callTicker.bind(this);
         window.requestAnimationFrame(this.callTicker);
@@ -77,8 +69,8 @@ class Game {
         // Render if requested
         if (render) {
             let i = 0;
-            for (let y = 0; y < this.height; ++y) {
-                for (let x = 0; x < this.width; ++x) {
+            for (let y = 0; y < this.vm.height; ++y) {
+                for (let x = 0; x < this.vm.width; ++x) {
                     this.data[i] = ((x + this.dX) * 2) % 256;
                     this.data[i + 1] = ((y + this.dY) * 2) % 256;
                     this.data[i + 2] = 0;
