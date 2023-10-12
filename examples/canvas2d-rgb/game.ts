@@ -26,7 +26,7 @@ class Game implements IGame {
     vm: IVM;
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
-    imageData: ImageData;
+    imageData!: ImageData;
     data: Uint8ClampedArray;
     oldTime?: DOMHighResTimeStamp;
 
@@ -37,16 +37,18 @@ class Game implements IGame {
     constructor(vm: IVM) {
         this.vm = vm;
 
-        // Attach a canvas to the VM
+        // Create a new canvas
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d")!;
-        this.imageData = this.context.getImageData(0, 0, vm.width, vm.height);
+
+        // Internally use the native resolution of 256x256 pixels
+        this.canvas.width = 256;
+        this.canvas.height = 256;
+        this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+
+        // Attach to the VM
         this.data = this.imageData.data;
         vm.root.appendChild(this.canvas);
-
-        // Internally use the native resolution
-        this.canvas.width = vm.width;
-        this.canvas.height = vm.height;
 
         // Game loop
         this.callTicker = this.callTicker.bind(this);
@@ -125,8 +127,8 @@ class Game implements IGame {
             let i = 0;
             for (let y = 0; y < this.vm.height; ++y) {
                 for (let x = 0; x < this.vm.width; ++x) {
-                    this.data[i] = ((x + this.dX) * 2) % 256;
-                    this.data[i + 1] = ((y + this.dY) * 2) % 256;
+                    this.data[i] = (x + this.dX) % 256;
+                    this.data[i + 1] = (y + this.dY) % 256;
                     this.data[i + 2] = 0;
                     this.data[i + 3] = 255;
                     i += 4;
