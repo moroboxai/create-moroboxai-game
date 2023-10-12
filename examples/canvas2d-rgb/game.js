@@ -10,7 +10,12 @@ class Game {
         // Internally use the native resolution of 256x256 pixels
         this.canvas.width = 256;
         this.canvas.height = 256;
-        this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        this.imageData = this.context.getImageData(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
         // Attach to the VM
         this.data = this.imageData.data;
         vm.root.appendChild(this.canvas);
