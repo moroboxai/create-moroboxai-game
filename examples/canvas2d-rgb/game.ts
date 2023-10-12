@@ -14,6 +14,10 @@ import type {
 
 declare const exports: IBootable;
 
+// Native size of the game
+const GAME_WIDTH: number = 256;
+const GAME_HEIGHT: number = 256;
+
 /**
  * State of the game sent to agent to determine the inputs.
  */
@@ -42,13 +46,13 @@ class Game implements IGame {
         this.context = this.canvas.getContext("2d")!;
 
         // Internally use the native resolution of 256x256 pixels
-        this.canvas.width = 256;
-        this.canvas.height = 256;
+        this.canvas.width = GAME_WIDTH;
+        this.canvas.height = GAME_HEIGHT;
         this.imageData = this.context.getImageData(
             0,
             0,
-            this.canvas.width,
-            this.canvas.height
+            GAME_WIDTH,
+            GAME_HEIGHT
         );
 
         // Attach to the VM
@@ -130,8 +134,8 @@ class Game implements IGame {
         // Render if requested
         if (render) {
             let i = 0;
-            for (let y = 0; y < this.vm.height; ++y) {
-                for (let x = 0; x < this.vm.width; ++x) {
+            for (let y = 0; y < GAME_HEIGHT; ++y) {
+                for (let x = 0; x < GAME_WIDTH; ++x) {
                     this.data[i] = (x + this.dX) % 256;
                     this.data[i + 1] = (y + this.dY) % 256;
                     this.data[i + 2] = 0;

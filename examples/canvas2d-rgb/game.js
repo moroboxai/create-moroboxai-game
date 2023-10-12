@@ -1,3 +1,6 @@
+// Native size of the game
+const GAME_WIDTH = 256;
+const GAME_HEIGHT = 256;
 class Game {
     constructor(vm) {
         // Offset driven by the agent
@@ -8,13 +11,13 @@ class Game {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         // Internally use the native resolution of 256x256 pixels
-        this.canvas.width = 256;
-        this.canvas.height = 256;
+        this.canvas.width = GAME_WIDTH;
+        this.canvas.height = GAME_HEIGHT;
         this.imageData = this.context.getImageData(
             0,
             0,
-            this.canvas.width,
-            this.canvas.height
+            GAME_WIDTH,
+            GAME_HEIGHT
         );
         // Attach to the VM
         this.data = this.imageData.data;
@@ -75,8 +78,8 @@ class Game {
         // Render if requested
         if (render) {
             let i = 0;
-            for (let y = 0; y < this.vm.height; ++y) {
-                for (let x = 0; x < this.vm.width; ++x) {
+            for (let y = 0; y < GAME_HEIGHT; ++y) {
+                for (let x = 0; x < GAME_WIDTH; ++x) {
                     this.data[i] = (x + this.dX) % 256;
                     this.data[i + 1] = (y + this.dY) % 256;
                     this.data[i + 2] = 0;
