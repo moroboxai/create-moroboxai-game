@@ -1,3 +1,5 @@
+type: game
+id: canvas2d-rgb
 width: 256
 height: 256
 scale: 1
